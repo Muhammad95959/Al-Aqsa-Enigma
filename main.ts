@@ -10,6 +10,7 @@ let startX = 0,
 
 sides.forEach(function (side) {
   side.addEventListener("mousedown", mouseDown);
+  side.addEventListener("touchstart", touchStart);
 });
 
 function mouseDown(ev: MouseEvent) {
@@ -30,6 +31,24 @@ function mouseDown(ev: MouseEvent) {
   }
 }
 
+function touchStart(ev: TouchEvent) {
+  const target = ev.target as HTMLDivElement;
+  const parent = target.parentElement;
+  let isHoveringTheBase = false;
+  if (parent) isHoveringTheBase = ev.targetTouches[0].clientY > parent.offsetTop + sideSize - sideSize / 7;
+  if (parent && parent.children.length > 1 && !isHoveringTheBase) {
+    topBlock = parent?.firstElementChild as HTMLDivElement;
+    startX = ev.targetTouches[0].clientX;
+    startY = ev.targetTouches[0].clientY;
+    const width = parseFloat(window.getComputedStyle(topBlock).width);
+    topBlock.style.left = startX - width / 2 + "px";
+    const height = parseFloat(window.getComputedStyle(topBlock).height);
+    topBlock.style.top = startY - height / 2 + "px";
+    document.addEventListener("touchmove", touchMoveWrapper);
+    document.addEventListener("touchend", touchEndWrapper);
+  }
+}
+
 function mouseMove(ev: MouseEvent, topBlock: HTMLElement) {
   newX = startX - ev.clientX;
   newY = startY - ev.clientY;
@@ -43,6 +62,21 @@ function mouseMove(ev: MouseEvent, topBlock: HTMLElement) {
 
 function mouseMoveWrapper(ev: MouseEvent) {
   mouseMove(ev, topBlock);
+}
+
+function touchMove(ev: TouchEvent, topBlock: HTMLElement) {
+  newX = startX - ev.targetTouches[0].clientX;
+  newY = startY - ev.targetTouches[0].clientY;
+  startX = ev.targetTouches[0].clientX;
+  startY = ev.targetTouches[0].clientY;
+  topBlock.style.position = "fixed";
+  topBlock.style.zIndex = "1";
+  topBlock.style.left = topBlock.offsetLeft - newX + "px";
+  topBlock.style.top = topBlock.offsetTop - newY + "px";
+}
+
+function touchMoveWrapper(ev: TouchEvent) {
+  touchMove(ev, topBlock);
 }
 
 function mouseUp(ev: MouseEvent, topBlock: HTMLElement) {
@@ -73,4 +107,34 @@ function mouseUp(ev: MouseEvent, topBlock: HTMLElement) {
 
 function mouseUpWrapper(ev: MouseEvent) {
   mouseUp(ev, topBlock);
+}
+
+function touchEnd(ev: TouchEvent, topBlock: HTMLElement) {
+  document.removeEventListener("touchmove", touchMoveWrapper);
+  document.removeEventListener("touchend", touchEndWrapper);
+  topBlock.style.zIndex = "0";
+  topBlock.style.position = "static";
+  sides.forEach(function (side) {
+    if (side === topBlock.parentElement) return;
+    const top = side.offsetTop,
+      bottom = side.offsetTop + sideSize,
+      left = side.offsetLeft,
+      right = side.offsetLeft + sideSize;
+    const currentSideTopOrder: number = parseInt(topBlock.dataset.order ?? "0");
+    const newSideFirstChild: HTMLElement = side.firstElementChild as HTMLElement;
+    const newSideTopOrder: number = parseInt(newSideFirstChild.dataset.order ?? "0");
+    if (
+      ev.changedTouches[0].clientY > top &&
+      ev.changedTouches[0].clientY < bottom &&
+      ev.changedTouches[0].clientX > left &&
+      ev.changedTouches[0].clientX < right &&
+      currentSideTopOrder < newSideTopOrder
+    ) {
+      side.prepend(topBlock);
+    }
+  });
+}
+
+function touchEndWrapper(ev: TouchEvent) {
+  touchEnd(ev, topBlock);
 }
