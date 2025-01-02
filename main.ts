@@ -1,3 +1,5 @@
+const rules = document.querySelector(".rules") as HTMLDivElement;
+const rulesCloseBtn = document.querySelector(".rules .closeBtn") as HTMLButtonElement;
 const sides = document.querySelectorAll('div[class^="side"]') as NodeListOf<HTMLDivElement>;
 const sideSize: number = parseFloat(
   window.getComputedStyle(document.documentElement).getPropertyValue("--size"),
@@ -7,6 +9,17 @@ let startX = 0,
   startY = 0,
   newX = 0,
   newY = 0;
+
+if (window.localStorage.getItem("dontShowRules") === "true") rules.remove();
+
+rulesCloseBtn.addEventListener("click", function () {
+  const dontShowState: boolean = (document.querySelector(".rules input") as HTMLInputElement)
+    .checked;
+  if (dontShowState) {
+    window.localStorage.setItem("dontShowRules", "true");
+  }
+  rules.remove();
+});
 
 sides.forEach(function (side) {
   side.addEventListener("mousedown", mouseDown);
@@ -35,7 +48,8 @@ function touchStart(ev: TouchEvent) {
   const target = ev.target as HTMLDivElement;
   const parent = target.parentElement;
   let isHoveringTheBase = false;
-  if (parent) isHoveringTheBase = ev.targetTouches[0].clientY > parent.offsetTop + sideSize - sideSize / 7;
+  if (parent)
+    isHoveringTheBase = ev.targetTouches[0].clientY > parent.offsetTop + sideSize - sideSize / 7;
   if (parent && parent.children.length > 1 && !isHoveringTheBase) {
     topBlock = parent?.firstElementChild as HTMLDivElement;
     startX = ev.targetTouches[0].clientX;

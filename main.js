@@ -1,7 +1,19 @@
+var rules = document.querySelector(".rules");
+var rulesCloseBtn = document.querySelector(".rules .closeBtn");
 var sides = document.querySelectorAll('div[class^="side"]');
 var sideSize = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue("--size"));
 var topBlock;
 var startX = 0, startY = 0, newX = 0, newY = 0;
+if (window.localStorage.getItem("dontShowRules") === "true")
+    rules.remove();
+rulesCloseBtn.addEventListener("click", function () {
+    var dontShowState = document.querySelector(".rules input")
+        .checked;
+    if (dontShowState) {
+        window.localStorage.setItem("dontShowRules", "true");
+    }
+    rules.remove();
+});
 sides.forEach(function (side) {
     side.addEventListener("mousedown", mouseDown);
     side.addEventListener("touchstart", touchStart);
