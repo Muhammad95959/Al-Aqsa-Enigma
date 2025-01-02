@@ -24,14 +24,14 @@
   }
   @media (min-width: 800px) {
     --size: 240px;
-    --gap: 20px
+    --gap: 20px;
   }
   @media (min-width: 1000px) {
     --size: 300px;
   }
   @media (min-width: 1200px) {
     --size: 340px;
-    --gap: 40px
+    --gap: 40px;
   }
   @media (min-width: 1400px) {
     --size: 410px;
@@ -171,16 +171,16 @@ body {
     width: 75px;
     height: 50px;
     @media (max-width: 1200px) {
-    font-size: 20px;
-    font-weight: bold;
-    width: 45px;
-    height: 30px;
+      font-size: 20px;
+      font-weight: bold;
+      width: 45px;
+      height: 30px;
     }
     @media (max-width: 800px) {
-    font-size: 12px;
-    font-weight: bold;
-    width: 30px;
-    height: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      width: 30px;
+      height: 20px;
     }
   }
 }
