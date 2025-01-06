@@ -99,6 +99,7 @@ function mouseUp(ev, topBlock) {
             ev.clientX < right &&
             currentSideTopOrder < newSideTopOrder) {
             side.prepend(topBlock);
+            checkResult();
         }
     });
 }
@@ -124,9 +125,14 @@ function touchEnd(ev, topBlock) {
             ev.changedTouches[0].clientX < right &&
             currentSideTopOrder < newSideTopOrder) {
             side.prepend(topBlock);
+            checkResult();
         }
     });
 }
 function touchEndWrapper(ev) {
     touchEnd(ev, topBlock);
+}
+function checkResult() {
+    if (sides[sides.length - 1].children.length === 7)
+        console.log("Congrats, You Win!");
 }

@@ -9,6 +9,7 @@
   --yellow: #e5c890;
   --red: #ed8796;
   --crust: #232634;
+  --background: #201f1b;
   @media (max-width: 400px) {
     --size: 120px;
     --gap: 10px;
@@ -46,9 +47,11 @@
 }
 
 body {
-  background-color: var(--crust);
+  background-color: var(--background);
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 20px;
   align-items: center;
   height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
@@ -58,7 +61,7 @@ body {
   background-image: url(../assets/background.jpg);
   background-size: cover;
   background-position: center;
-  filter: blur(20px);
+  /*filter: blur(20px);*/
   position: absolute;
   top: 0;
   left: 0;
@@ -66,7 +69,7 @@ body {
   height: 100vh;
   &::after {
     content: "";
-    background-color: rgba(35, 38, 52, 0.5);
+    background-color: rgba(35, 38, 52, 0.9);
     width: 100%;
     height: 100%;
     position: absolute;
@@ -79,7 +82,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(4, 17, 15, 0.75);
+  background-color: rgba(32, 31, 27, 0.5);
   width: 100%;
   height: 100vh;
   display: grid;
@@ -87,7 +90,7 @@ body {
   z-index: 2;
   .content {
     position: relative;
-    background-color: #04110f;
+    background-color: #24242F;
     border-radius: 10px;
     box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);
     color: #bfdcea;
@@ -137,11 +140,37 @@ body {
   }
 }
 
+.trackers {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  user-select: none;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  > div {
+    background-color: hsl(40 62% 68%);
+    color: var(--background);
+    padding: 8px 16px;
+    font-size: 1.3vw;
+    border-radius: 20px;
+    width: calc(10% - 10px);
+    min-width: fit-content;
+    text-align: center;
+    span {
+      &.number {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
 .container {
   display: flex;
   width: fit-content;
   align-items: center;
-  margin: 40px;
+  margin-left: 40px;
+  margin-right: 40px;
   gap: var(--gap);
   div[class^="side"] {
     width: var(--size);
@@ -162,7 +191,7 @@ body {
       100% 100%,
       0 100%
     );
-    background-image: url(../assets/squared.jpg);
+    background-image: url(../assets/al-aqsa-squared.jpg);
     background-size: var(--size);
     border-bottom: 1px solid var(--rosewater);
     &.block-1 {
@@ -200,7 +229,7 @@ body {
       100% 100%,
       0 100%
     );
-    background-image: url(../assets/squared.jpg);
+    background-image: url(../assets/al-aqsa-squared.jpg);
     background-size: var(--size);
     background-position: 50% 100%;
     display: flex;
@@ -214,16 +243,14 @@ body {
 }
 
 .letters {
-  position: absolute;
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: calc(var(--size) * 3 + var(--gap) * 3);
-  top: calc(50% + var(--size) / 2 + 20px);
   span {
     user-select: none;
     background-color: var(--yellow);
-    color: var(--crust);
+    color: var(--background);
     clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
     display: flex;
     justify-content: center;
@@ -245,5 +272,23 @@ body {
       width: 30px;
       height: 20px;
     }
+  }
+}
+
+.play-again {
+  cursor: pointer;
+  position: relative;
+  background-color: hsl(171 62% 4% / 85%);
+  font-size: 1.3vw;
+  padding: 8px 16px;
+  width: 20%;
+  border-radius: 20px;
+  outline: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: hsl(171 62% 0% / 85%);
   }
 }

@@ -115,6 +115,7 @@ function mouseUp(ev: MouseEvent, topBlock: HTMLElement) {
       currentSideTopOrder < newSideTopOrder
     ) {
       side.prepend(topBlock);
+      checkResult();
     }
   });
 }
@@ -145,10 +146,15 @@ function touchEnd(ev: TouchEvent, topBlock: HTMLElement) {
       currentSideTopOrder < newSideTopOrder
     ) {
       side.prepend(topBlock);
+      checkResult();
     }
   });
 }
 
 function touchEndWrapper(ev: TouchEvent) {
   touchEnd(ev, topBlock);
+}
+
+function checkResult() {
+  if (sides[sides.length - 1].children.length === 7) console.log("Congrats, You Win!")
 }
