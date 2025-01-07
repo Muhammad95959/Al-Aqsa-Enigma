@@ -276,6 +276,7 @@ body {
 }
 
 .play-again {
+  user-select: none;
   cursor: pointer;
   position: relative;
   background-color: hsl(171 62% 4% / 85%);
