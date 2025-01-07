@@ -1,8 +1,14 @@
 var rules = document.querySelector(".rules");
 var rulesCloseBtn = document.querySelector(".rules .closeBtn");
+var movesSpan = document.querySelector(".moves .number");
+var timeSpan = document.querySelector(".time .number");
 var sides = document.querySelectorAll('div[class^="side"]');
+var playAgainBtn = document.querySelector(".play-again");
 var sideSize = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue("--size"));
+var timeInterval;
 var topBlock;
+var moves = 0;
+var time = 0;
 var startX = 0, startY = 0, newX = 0, newY = 0;
 if (window.localStorage.getItem("dontShowRules") === "true")
     rules.remove();
@@ -98,6 +104,13 @@ function mouseUp(ev, topBlock) {
             ev.clientX > left &&
             ev.clientX < right &&
             currentSideTopOrder < newSideTopOrder) {
+            if (moves === 0)
+                timeInterval = setInterval(function () {
+                    time += 0.1;
+                    timeSpan.textContent = time.toFixed(1);
+                }, 100);
+            moves++;
+            movesSpan.textContent = moves.toString();
             side.prepend(topBlock);
             checkResult();
         }
@@ -124,6 +137,13 @@ function touchEnd(ev, topBlock) {
             ev.changedTouches[0].clientX > left &&
             ev.changedTouches[0].clientX < right &&
             currentSideTopOrder < newSideTopOrder) {
+            if (moves === 0)
+                timeInterval = setInterval(function () {
+                    time += 0.1;
+                    timeSpan.textContent = time.toFixed(1);
+                }, 100);
+            moves++;
+            movesSpan.textContent = moves.toString();
             side.prepend(topBlock);
             checkResult();
         }
@@ -132,7 +152,21 @@ function touchEnd(ev, topBlock) {
 function touchEndWrapper(ev) {
     touchEnd(ev, topBlock);
 }
+playAgainBtn.addEventListener("click", function () { return window.location.reload(); });
 function checkResult() {
-    if (sides[sides.length - 1].children.length === 7)
-        console.log("Congrats, You Win!");
+    if (sides[sides.length - 1].children.length === 7) {
+        clearInterval(timeInterval);
+        sides.forEach(function (side) {
+            side.removeEventListener("mousedown", mouseDown);
+            side.removeEventListener("touchstart", touchStart);
+            side.style.cursor = "default";
+        });
+        var congratsDiv_1 = document.querySelector(".congratulations");
+        congratsDiv_1.style.visibility = "visible";
+        congratsDiv_1.style.opacity = "1";
+        congratsDiv_1.onclick = function () {
+            congratsDiv_1.style.opacity = "0";
+            setTimeout(function () { return (congratsDiv_1.style.visibility = "hidden"); }, 500);
+        };
+    }
 }

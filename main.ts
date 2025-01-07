@@ -1,10 +1,16 @@
 const rules = document.querySelector(".rules") as HTMLDivElement;
 const rulesCloseBtn = document.querySelector(".rules .closeBtn") as HTMLButtonElement;
+const movesSpan = document.querySelector(".moves .number") as HTMLSpanElement;
+const timeSpan = document.querySelector(".time .number") as HTMLSpanElement;
 const sides = document.querySelectorAll('div[class^="side"]') as NodeListOf<HTMLDivElement>;
+const playAgainBtn = document.querySelector(".play-again") as HTMLButtonElement;
 const sideSize: number = parseFloat(
   window.getComputedStyle(document.documentElement).getPropertyValue("--size"),
 );
+let timeInterval: number;
 let topBlock: HTMLElement;
+let moves = 0;
+let time = 0;
 let startX = 0,
   startY = 0,
   newX = 0,
@@ -114,6 +120,13 @@ function mouseUp(ev: MouseEvent, topBlock: HTMLElement) {
       ev.clientX < right &&
       currentSideTopOrder < newSideTopOrder
     ) {
+      if (moves === 0)
+        timeInterval = setInterval(function () {
+          time += 0.1;
+          timeSpan.textContent = time.toFixed(1);
+        }, 100);
+      moves++;
+      movesSpan.textContent = moves.toString();
       side.prepend(topBlock);
       checkResult();
     }
@@ -145,6 +158,13 @@ function touchEnd(ev: TouchEvent, topBlock: HTMLElement) {
       ev.changedTouches[0].clientX < right &&
       currentSideTopOrder < newSideTopOrder
     ) {
+      if (moves === 0)
+        timeInterval = setInterval(function () {
+          time += 0.1;
+          timeSpan.textContent = time.toFixed(1);
+        }, 100);
+      moves++;
+      movesSpan.textContent = moves.toString();
       side.prepend(topBlock);
       checkResult();
     }
@@ -155,6 +175,22 @@ function touchEndWrapper(ev: TouchEvent) {
   touchEnd(ev, topBlock);
 }
 
+playAgainBtn.addEventListener("click", () => window.location.reload());
+
 function checkResult() {
-  if (sides[sides.length - 1].children.length === 7) console.log("Congrats, You Win!")
+  if (sides[sides.length - 1].children.length === 7) {
+    clearInterval(timeInterval);
+    sides.forEach(function (side) {
+      side.removeEventListener("mousedown", mouseDown);
+      side.removeEventListener("touchstart", touchStart);
+      side.style.cursor = "default";
+    });
+    const congratsDiv = document.querySelector(".congratulations") as HTMLDivElement;
+    congratsDiv.style.visibility = "visible";
+    congratsDiv.style.opacity = "1";
+    congratsDiv.onclick = function () {
+      congratsDiv.style.opacity = "0";
+      setTimeout(() => (congratsDiv.style.visibility = "hidden"), 500);
+    };
+  }
 }
